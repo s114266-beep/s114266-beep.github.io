@@ -11,178 +11,335 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>歌曲 × 情緒 搜尋系統</title>
-
-<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;600;700&display=swap" rel="stylesheet">
-
+<title>全部歌曲搜尋</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC&display=swap" rel="stylesheet">
 <style>
-body{
-  margin:0;
-  padding:30px;
-  font-family:'Noto Sans TC',sans-serif;
-  background:linear-gradient(135deg,#eef2f7,#dfe9f3);
-}
-
-h1{
-  text-align:center;
-  margin-bottom:20px;
-  letter-spacing:2px;
-}
-
-#searchBox{
-  max-width:700px;
-  margin:0 auto 30px;
-  display:flex;
-  gap:10px;
-}
-
-#searchInput{
-  flex:1;
-  padding:14px;
-  font-size:16px;
-  border-radius:12px;
-  border:none;
-  outline:none;
-}
-
-button{
-  padding:14px 22px;
-  border:none;
-  border-radius:12px;
-  background:#4f46e5;
-  color:#fff;
-  font-size:16px;
-  cursor:pointer;
-}
-
-button:hover{opacity:.9}
-
-#results{
-  display:grid;
-  grid-template-columns:repeat(auto-fill,minmax(230px,1fr));
-  gap:16px;
-}
-
-.card{
-  background:#fff;
-  border-radius:16px;
-  padding:14px;
-  box-shadow:0 8px 20px rgba(0,0,0,.08);
-}
-
-.title{font-weight:700}
-.artist{font-size:14px;color:#555}
-.emotion{
-  margin-top:6px;
-  font-size:13px;
-  color:#7c3aed;
-}
+    body { font-family: 'Noto Sans TC', sans-serif; background-color: #f0f4f8; margin: 0; padding: 20px; }
+    h1 { text-align: center; color: #333; margin-bottom: 30px; }
+    #searchContainer { text-align: center; margin-bottom: 30px; }
+    #searchInput { width: 60%; padding: 10px; border-radius: 8px; border: 1px solid #ccc; font-size: 16px; }
+    #searchButton { padding: 10px 20px; border: none; border-radius: 8px; background-color: #4CAF50; color: white; font-size: 16px; cursor: pointer; margin-left: 10px; }
+    #searchButton:hover { background-color: #45a049; }
+    #results { display: flex; flex-wrap: wrap; justify-content: center; }
+    .song-card { background-color: #fff; border-radius: 12px; box-shadow: 0 4px 8px rgba(0,0,0,0.1); margin: 10px; padding: 15px; width: 220px; text-align: center; transition: transform 0.2s; }
+    .song-card:hover { transform: translateY(-5px); box-shadow: 0 8px 16px rgba(0,0,0,0.2); }
+    .song-title { font-weight: bold; margin-bottom: 8px; color: #333; font-size: 16px; }
+    .song-artist { font-size: 14px; color: #666; margin-bottom: 5px; }
+    .song-mood { font-size: 12px; color: #888; }
 </style>
 </head>
-
 <body>
-
-<h1>🎵 全部歌曲 × 情緒搜尋</h1>
-
-<div id="searchBox">
-  <input id="searchInput" placeholder="歌名 / 歌手 / 情緒">
-  <button onclick="search()">搜尋</button>
+<h1>全部歌曲關鍵字搜尋</h1>
+<div id="searchContainer">
+    <input type="text" id="searchInput" placeholder="輸入歌名、歌手或情緒">
+    <button id="searchButton" onclick="searchSongs()">搜尋</button>
 </div>
-
 <div id="results"></div>
-
 <script>
-// ===== 情緒清單 =====
-const emotions = [
-"高興","開心","快樂","興奮","愉快","喜悅","雀躍","樂觀","喜樂","狂喜","歡喜","歡暢",
-"反感","可惡","可恨","痛恨","痛惡","嫌棄","嫌惡","厭煩","惡心","輕蔑","討厭",
-"哀傷","失望","抑鬱","沉痛","空虛","沮喪","絕望","難受","心痛","傷心",
-"慌張","不安","可怕","疑慮","畏懼","焦慮","擔憂","驚恐","懼怕","陰影","驚嚇",
-"焦躁","惱火","惱人","氣憤","憎恨","不爽","氣惱","震怒","惱怒","悲憤","仇恨"
-];
-
-// ===== 所有歌曲（你給的，全部）=====
 const songs = [
-/* PIZZALI */
-...["瓶中信","翼","翼（重生2025）","赤子","做我的初戀","指針（Compass）","4AM","如果我們還可以","熱血2024",
-"狠操俱樂部（高教練版本）","航班777","終極浪漫","牡羊座","千禧囝","腐朽的心還在凌晨四點","Air Force"]
-.map(t=>({artist:"PIZZALI",title:t})),
+  // PIZZALI
+  {artist:"PIZZALI",title:"瓶中信",mood:["快樂","愉快"]},
+  {artist:"PIZZALI",title:"翼",mood:["高興","興奮"]},
+  {artist:"PIZZALI",title:"翼（重生2025）",mood:["雀躍","喜悅"]},
+  {artist:"PIZZALI",title:"赤子",mood:["樂觀","喜樂"]},
+  {artist:"PIZZALI",title:"做我的初戀",mood:["甜","幸福爆了"]},
+  {artist:"PIZZALI",title:"指針（Compass）",mood:["暖","療癒"]},
+  {artist:"PIZZALI",title:"4AM",mood:["哀傷","心痛"]},
+  {artist:"PIZZALI",title:"如果我們還可以",mood:["快樂","幸福爆了"]},
+  {artist:"PIZZALI",title:"熱血2024",mood:["爽","興奮"]},
+  {artist:"PIZZALI",title:"狠操俱樂部（高教練版本）feat. 高爾宣",mood:["氣憤","暴躁"]},
+  {artist:"PIZZALI",title:"航班777",mood:["焦慮","不安"]},
+  {artist:"PIZZALI",title:"終極浪漫",mood:["甜","幸福爆了"]},
+  {artist:"PIZZALI",title:"牡羊座 feat. Amili",mood:["愉快","雀躍"]},
+  {artist:"PIZZALI",title:"千禧囝 feat. 王ADEN",mood:["快樂","興奮"]},
+  {artist:"PIZZALI",title:"腐朽的心還在凌晨四點",mood:["哀傷","難過"]},
+  {artist:"PIZZALI",title:"Air Force feat. AcRoss",mood:["激動","爽"]},
 
-/* BK */
-...["凌晨三點","你對我多重要","你愛我的樣子","擱淺","不習慣說再見","一直想著妳很累",
-"到底要怎麼做妳才懂","我不會再遇到像妳一樣的女孩了"]
-.map(t=>({artist:"BK",title:t})),
+  // BK
+  {artist:"BK",title:"凌晨三點（含不同版本）",mood:["哀傷","難過"]},
+  {artist:"BK",title:"你對我多重要（含 Pt.2）",mood:["心痛","傷心"]},
+  {artist:"BK",title:"你愛我的樣子",mood:["甜","幸福爆了"]},
+  {artist:"BK",title:"擱淺",mood:["悲傷","失落"]},
+  {artist:"BK",title:"不習慣說再見",mood:["傷心","難過"]},
+  {artist:"BK",title:"一直想著妳很累",mood:["心累","低潮"]},
+  {artist:"BK",title:"到底要怎麼做妳才懂",mood:["焦慮","不安"]},
+  {artist:"BK",title:"我不會再遇到像妳一樣的女孩了",mood:["哀傷","心碎"]},
 
-/* 周興哲 */
-...["學著愛","以後別做朋友","你，好不好？","愛，教會我們的事","我愛過你","如果雨之後","不屬於我",
-"愛在身邊","終於了解自由","This Is Love","小時候的我們","想知道你在想什麼","黏黏",
-"不完整的人","想念你想我","永不結束的情人節","I LOVE US","我們沒開始",
-"青春要用幾行詩來寫","永不失聯的愛","怎麼了","摯友","離開你以後","我很快樂"]
-.map(t=>({artist:"周興哲",title:t})),
+  // 周興哲
+  {artist:"周興哲",title:"學著愛",mood:["甜","幸福爆了"]},
+  {artist:"周興哲",title:"以後別做朋友",mood:["傷心","難過"]},
+  {artist:"周興哲",title:"你，好不好？",mood:["焦慮","不安"]},
+  {artist:"周興哲",title:"愛，教會我們的事",mood:["甜","溫暖"]},
+  {artist:"周興哲",title:"我愛過你",mood:["悲傷","哀傷"]},
+  {artist:"周興哲",title:"如果雨之後",mood:["哀傷","低潮"]},
+  {artist:"周興哲",title:"不屬於我",mood:["失望","難過"]},
+  {artist:"周興哲",title:"愛在身邊",mood:["甜","幸福爆了"]},
+  {artist:"周興哲",title:"終於了解自由",mood:["快樂","樂觀"]},
+  {artist:"周興哲",title:"This Is Love",mood:["爽","開心"]},
 
-/* PPLin */
-...["我是愛很深的人","最後一班車","天氣晴","想再問你一次","Keep That","Not My Fault",
-"愛使我無法醒來","相信我在","留不住","放心吧爸媽","擦肩而過","Don’t Die",
-"想想了不只幾百次","妳不離開我都在","Remember"]
-.map(t=>({artist:"PPLin",title:t})),
+  // PPLin
+  {artist:"PPLin",title:"我是愛很深的人",mood:["甜","心暖"]},
+  {artist:"PPLin",title:"最後一班車（含 Acoustic）",mood:["哀傷","失落"]},
+  {artist:"PPLin",title:"天氣晴",mood:["快樂","愉快"]},
+  {artist:"PPLin",title:"想再問你一次",mood:["焦慮","不安"]},
+  {artist:"PPLin",title:"Keep That feat. ZEO",mood:["興奮","激動"]},
+  {artist:"PPLin",title:"Not My Fault",mood:["憤怒","氣憤"]},
+  {artist:"PPLin",title:"愛使我無法醒來 feat. Rlong",mood:["悲傷","哀傷"]},
+  {artist:"PPLin",title:"相信我在",mood:["快樂","幸福爆了"]},
+  {artist:"PPLin",title:"留不住",mood:["哀傷","失落"]},
+  {artist:"PPLin",title:"放心吧爸媽",mood:["安心","療癒"]},
+  {artist:"PPLin",title:"擦肩而過",mood:["傷心","失落"]},
+  {artist:"PPLin",title:"Don’t Die",mood:["焦慮","擔憂"]},
+  {artist:"PPLin",title:"想想了不只幾百次",mood:["心累","低潮"]},
+  {artist:"PPLin",title:"妳不離開我都在",mood:["甜","幸福爆了"]},
+  {artist:"PPLin",title:"Remember",mood:["懷念","哀傷"]},
 
-/* EN */
-...["囂張","間距","奉勸","跳樓機","放空","如果這就是愛情","暗示分離","等雨停",
-"生分","我走後","北緯23°26'","換掉","靜悄悄"]
-.map(t=>({artist:"EN",title:t})),
+  // EN
+  {artist:"EN",title:"囂張",mood:["興奮","激動"]},
+  {artist:"EN",title:"間距",mood:["冷漠","無感"]},
+  {artist:"EN",title:"奉勸",mood:["警告","焦慮"]},
+  {artist:"EN",title:"跳樓機",mood:["刺激","興奮"]},
+  {artist:"EN",title:"放空",mood:["放鬆","心情很好"]},
+  {artist:"EN",title:"如果這就是愛情",mood:["甜","幸福爆了"]},
+  {artist:"EN",title:"暗示分離",mood:["哀傷","心痛"]},
+  {artist:"EN",title:"等雨停",mood:["失落","悲傷"]},
+  {artist:"EN",title:"生分（男版）",mood:["哀傷","低潮"]},
+  {artist:"EN",title:"我走後（深情版）",mood:["悲傷","心碎"]},
+  {artist:"EN",title:"北緯23°26'",mood:["思念","心累"]},
+  {artist:"EN",title:"換掉",mood:["不爽","氣惱"]},
+  {artist:"EN",title:"靜悄悄",mood:["平靜","放鬆"]}
+  
+  // LBI
+  {artist:"LBI",title:"Jumping Machine（跳樓機）",mood:["刺激","興奮"]},
+  {artist:"LBI",title:"小城夏天",mood:["甜","溫暖"]},
+  {artist:"LBI",title:"或許",mood:["哀傷","失落"]},
+  {artist:"LBI",title:"爛片劇情",mood:["無奈","不爽"]},
+  {artist:"LBI",title:"洛杉磯",mood:["愉快","快樂"]},
+  {artist:"LBI",title:"說愛你（男聲版）",mood:["甜","幸福爆了"]},
+  {artist:"LBI",title:"破傘",mood:["哀傷","心痛"]},
+  {artist:"LBI",title:"潛意識",mood:["沉思","低潮"]},
+  {artist:"LBI",title:"安全感",mood:["安心","療癒"]},
 
-/* LBI */
-...["Jumping Machine","小城夏天","或許","爛片劇情","洛杉磯","說愛你","破傘","潛意識","安全感",
-"妥協","刀背","過度理解","淋一場雨","請你不要忘記我","落入銀河裡","我們明明",
-"不可逆的軌跡","分界","若重新來過","折起的遺憾","For You.","最後","稱謂",
-"擁過你的風","放過你了","海風裡","壞人設","走向我是為了離開我","不",
-"日落風起","想過不只一百遍","可我只是海","落日與你","雪夜","頹靡是常態","完美的大人吶"]
-.map(t=>({artist:"LBI",title:t})),
+  // 公館青少年
+{artist:"公館青少年",title:"要不要跟我出去走一走",mood:["愉快","開心"]},
+{artist:"公館青少年",title:"其實我一點都不酷",mood:["搞笑","輕鬆"]},
+{artist:"公館青少年",title:"星星",mood:["療癒","平靜"]},
+{artist:"公館青少年",title:"你到底在選擇什麼",mood:["困惑","焦慮"]},
+{artist:"公館青少年",title:"青少年觀察日記",mood:["平靜","思考"]},
+{artist:"公館青少年",title:"偶超級宇宙無敵霹靂愛尼",mood:["開心","快樂"]},
+{artist:"公館青少年",title:"一個人默默的酷",mood:["孤單","淡淡哀傷"]},
 
-/* 其餘歌手（同樣全部） */
-...[
-["公館青少年","要不要跟我出去走一走","其實我一點都不酷","星星","你到底在選擇什麼","青少年觀察日記","偶超級宇宙無敵霹靂愛尼","一個人默默的酷"],
-["理想混蛋","不是因為天氣晴朗才愛你","我就想你","愚者","行星","滯留鋒","離開的一路上","接住你","天真世界的叛徒","我還沒有作好被打倒的準備","我反芻著你留下的寂寞","絕地花園","你討厭也沒關係","Reset","夏夜煙火","時間走了但你沒走","關掉／打開","半熟理想"],
-["鄭潤澤","槿","瞬","如果呢","小胡同","你","小微光","徹夜","遐想","假設","失落盛行","忘記","WAVE","白板","墜"],
-["Tr33","你知道你比晚霞好看嗎","沉船仔","綠蔭吹成黃葉","浪漫致死","By Your Side","Say No","在觀濱中出錯","橙色的心心","Feels Like Back in 2018","東京的街頭","Popstar in the 6","陽光雨後"],
-["ZQS","這是你期盼的長大嗎","愛是自由意志的沉淪","我要你快樂","我想要的很簡單","小時候真傻","這一年","車窗上的心事","接納遺憾","平凡已是不凡","何物"],
-["告五人","披星戴月的想你","愛人錯過","帶我去找夜生活","好不容易","在這座城市遺失了你","唯一","運氣來得若有似無","我肯定在幾百年前就說過愛你","帶你飛","我想要佔據你","黑夜狂奔","又到天黑","愛在夏天"]
-].flatMap(arr=>{
-  const [artist,...titles]=arr
-  return titles.map(t=>({artist,title:t}))
-})
+// 理想混蛋
+{artist:"理想混蛋",title:"不是因為天氣晴朗才愛你",mood:["甜","幸福"]},
+{artist:"理想混蛋",title:"我就想你",mood:["思念","哀傷"]},
+{artist:"理想混蛋",title:"愚者",mood:["迷茫","低潮"]},
+{artist:"理想混蛋",title:"行星",mood:["平靜","療癒"]},
+{artist:"理想混蛋",title:"滯留鋒",mood:["焦慮","不安"]},
+{artist:"理想混蛋",title:"離開的一路上",mood:["心痛","悲傷"]},
+{artist:"理想混蛋",title:"接住你",mood:["甜","幸福"]},
+{artist:"理想混蛋",title:"天真世界的叛徒",mood:["失望","難過"]},
+{artist:"理想混蛋",title:"我還沒有作好被打倒的準備",mood:["焦慮","不安"]},
+{artist:"理想混蛋",title:"我反芻著你留下的寂寞",mood:["哀傷","低落"]},
+{artist:"理想混蛋",title:"絕地花園",mood:["孤單","哀傷"]},
+{artist:"理想混蛋",title:"你討厭也沒關係",mood:["放鬆","解脫"]},
+{artist:"理想混蛋",title:"Reset",mood:["振作","快樂"]},
+{artist:"理想混蛋",title:"夏夜煙火",mood:["愉快","興奮"]},
+{artist:"理想混蛋",title:"時間走了但你沒走",mood:["哀傷","想念"]},
+{artist:"理想混蛋",title:"關掉／打開",mood:["平靜","思考"]},
+{artist:"理想混蛋",title:"半熟理想",mood:["迷茫","困惑"]},
+
+// 鄭潤澤
+{artist:"鄭潤澤",title:"槿",mood:["哀傷","沉痛"]},
+{artist:"鄭潤澤",title:"瞬",mood:["平靜","療癒"]},
+{artist:"鄭潤澤",title:"如果呢",mood:["遺憾","傷心"]},
+{artist:"鄭潤澤",title:"小胡同",mood:["平靜","溫暖"]},
+{artist:"鄭潤澤",title:"你",mood:["甜","心暖"]},
+{artist:"鄭潤澤",title:"小微光",mood:["希望","開心"]},
+{artist:"鄭潤澤",title:"徹夜",mood:["孤單","哀傷"]},
+{artist:"鄭潤澤",title:"遐想",mood:["沉思","低潮"]},
+{artist:"鄭潤澤",title:"假設 feat. 孫盛希",mood:["心痛","悲傷"]},
+{artist:"鄭潤澤",title:"失落盛行",mood:["哀傷","失落"]},
+{artist:"鄭潤澤",title:"忘記",mood:["悲傷","抑鬱"]},
+{artist:"鄭潤澤",title:"WAVE feat. 滄桑Cang333",mood:["開心","快樂"]},
+{artist:"鄭潤澤",title:"白板",mood:["空虛","低落"]},
+{artist:"鄭潤澤",title:"墜",mood:["哀傷","傷心"]},
+
+// Tr33
+{artist:"Tr33",title:"你知道你比晚霞好看嗎",mood:["甜","幸福"]},
+{artist:"Tr33",title:"沉船仔",mood:["哀傷","心痛"]},
+{artist:"Tr33",title:"綠蔭吹成黃葉",mood:["平靜","療癒"]},
+{artist:"Tr33",title:"浪漫致死",mood:["甜","浪漫"]},
+{artist:"Tr33",title:"By Your Side",mood:["甜","陪伴"]},
+{artist:"Tr33",title:"Say No 2024",mood:["氣憤","不爽"]},
+{artist:"Tr33",title:"在觀濱中出錯",mood:["困惑","焦慮"]},
+{artist:"Tr33",title:"橙色的心心",mood:["甜","快樂"]},
+{artist:"Tr33",title:"Feels Like Back in 2018",mood:["懷念","哀傷"]},
+{artist:"Tr33",title:"東京的街頭",mood:["愉快","開心"]},
+{artist:"Tr33",title:"Popstar in the 6",mood:["興奮","快樂"]},
+{artist:"Tr33",title:"陽光雨後",mood:["開心","愉快"]},
+
+// ZQS
+{artist:"ZQS",title:"這是你期盼的長大嗎",mood:["思考","沉思"]},
+{artist:"ZQS",title:"愛是自由意志的沉淪",mood:["哀傷","悲傷"]},
+{artist:"ZQS",title:"我要你快樂",mood:["快樂","愉快"]},
+{artist:"ZQS",title:"我想要的很簡單",mood:["平靜","療癒"]},
+{artist:"ZQS",title:"小時候真傻",mood:["懷念","哀傷"]},
+{artist:"ZQS",title:"這一年",mood:["思念","低落"]},
+{artist:"ZQS",title:"車窗上的心事",mood:["孤單","哀傷"]},
+{artist:"ZQS",title:"接納遺憾",mood:["釋懷","平靜"]},
+{artist:"ZQS",title:"平凡已是不凡",mood:["愉快","開心"]},
+{artist:"ZQS",title:"何物",mood:["迷茫","沉思"]},
+
+// 告五人
+{artist:"告五人",title:"披星戴月的想你",mood:["思念","哀傷"]},
+{artist:"告五人",title:"愛人錯過",mood:["心痛","難過"]},
+{artist:"告五人",title:"帶我去找夜生活",mood:["興奮","愉快"]},
+{artist:"告五人",title:"好不容易",mood:["放鬆","愉快"]},
+{artist:"告五人",title:"在這座城市遺失了你",mood:["哀傷","失落"]},
+{artist:"告五人",title:"唯一",mood:["甜","幸福"]},
+{artist:"告五人",title:"運氣來得若有似無",mood:["無奈","困惑"]},
+{artist:"告五人",title:"我肯定在幾百年前就說過愛你",mood:["甜","幸福"]},
+{artist:"告五人",title:"帶你飛",mood:["興奮","爽"]},
+{artist:"告五人",title:"我想要佔據你",mood:["甜","心暖"]},
+{artist:"告五人",title:"黑夜狂奔",mood:["激動","興奮"]},
+{artist:"告五人",title:"又到天黑",mood:["孤單","哀傷"]},
+{artist:"告五人",title:"愛在夏天",mood:["甜","幸福"]},
+  
+// 77莊永麒
+{artist:"77莊永麒",title:"你這個偷走我心的小偷",mood:["甜","心暖"]},
+{artist:"77莊永麒",title:"回來我身邊",mood:["思念","哀傷"]},
+{artist:"77莊永麒",title:"失去你之後",mood:["心痛","難過"]},
+{artist:"77莊永麒",title:"事到如今",mood:["無奈","困惑"]},
+{artist:"77莊永麒",title:"燦爛的你",mood:["開心","快樂"]},
+{artist:"77莊永麒",title:"Maximum Rock ’n Roll",mood:["興奮","激動"]},
+{artist:"77莊永麒",title:"Gimme Rock ’n Roll",mood:["興奮","嗨"]},
+{artist:"77莊永麒",title:"You Bore Me",mood:["無聊","氣惱"]},
+
+// 8lak
+{artist:"8lak",title:"Fall",mood:["哀傷","失落"]},
+{artist:"8lak",title:"雨過天晴",mood:["平靜","愉快"]},
+{artist:"8lak",title:"我的女孩",mood:["甜","幸福"]},
+{artist:"8lak",title:"就讓我再陪你",mood:["思念","甜"]},
+{artist:"8lak",title:"愛最深的總是我",mood:["心痛","悲傷"]},
+{artist:"8lak",title:"真不懂為啥又 emo 了",mood:["低落","哀傷"]},
+{artist:"8lak",title:"Tell Me",mood:["困惑","焦慮"]},
+{artist:"8lak",title:"使我成為我們",mood:["平靜","療癒"]},
+
+// 齊翔（XIANG）
+{artist:"齊翔（XIANG）",title:"妳不離開我都在",mood:["甜","思念"]},
+{artist:"齊翔（XIANG）",title:"妳和我",mood:["甜","幸福"]},
+{artist:"齊翔（XIANG）",title:"我想不透",mood:["困惑","焦慮"]},
+{artist:"齊翔（XIANG）",title:"我想有妳在的 Day & Night",mood:["甜","思念"]},
+{artist:"齊翔（XIANG）",title:"想了不只幾百次",mood:["思念","哀傷"]},
+{artist:"齊翔（XIANG）",title:"其實我不意外",mood:["平靜","釋懷"]},
+{artist:"齊翔（XIANG）",title:"Am I Loss",mood:["迷茫","困惑"]},
+{artist:"齊翔（XIANG）",title:"空房間",mood:["孤單","哀傷"]},
+{artist:"齊翔（XIANG）",title:"記號",mood:["思念","低落"]},
+{artist:"齊翔（XIANG）",title:"Follow Me",mood:["陪伴","開心"]},
+{artist:"齊翔（XIANG）",title:"發誓",mood:["承諾","堅定"]},
+{artist:"齊翔（XIANG）",title:"在你身旁走過",mood:["陪伴","溫暖"]},
+
+// JaS52
+{artist:"JaS52",title:"我想你會找到一個離開我的理由",mood:["哀傷","心痛"]},
+{artist:"JaS52",title:"不敢把話說得太滿怕最後輸得太慘",mood:["焦慮","不安"]},
+{artist:"JaS52",title:"說你愛我拜託",mood:["懇求","焦急"]},
+{artist:"JaS52",title:"從此沒你在我身邊陪我",mood:["孤單","哀傷"]},
+{artist:"JaS52",title:"就因為是你害我要對傷心還擊",mood:["氣憤","不爽"]},
+{artist:"JaS52",title:"把他心臟移植衛星裡",mood:["失落","憤怒"]},
+{artist:"JaS52",title:"怎麼可能沒以後但只是我的想法",mood:["困惑","焦慮"]},
+
+// 江辰
+{artist:"江辰",title:"Love9",mood:["甜","幸福"]},
+{artist:"江辰",title:"无感",mood:["冷漠","無奈"]},
+{artist:"江辰",title:"流浪",mood:["孤單","哀傷"]},
+{artist:"江辰",title:"巨蟹男子圖鑒",mood:["思考","迷茫"]},
+{artist:"江辰",title:"巴掌印",mood:["氣惱","憤怒"]},
+{artist:"江辰",title:"癮",mood:["依賴","迷茫"]},
+{artist:"江辰",title:"厌冬",mood:["低落","抑鬱"]},
+{artist:"江辰",title:"制裁",mood:["憤怒","氣惱"]},
+{artist:"江辰",title:"头像",mood:["思考","迷茫"]},
+{artist:"江辰",title:"两難",mood:["困惑","焦慮"]},
+{artist:"江辰",title:"潮汐",mood:["平靜","療癒"]},
+{artist:"江辰",title:"不做你備胎",mood:["氣憤","決絕"]},
+{artist:"江辰",title:"抽乾我靈魂",mood:["心痛","傷心"]},
+{artist:"江辰",title:"花火",mood:["甜","浪漫"]},
+{artist:"江辰",title:"相机",mood:["回憶","懷念"]},
+{artist:"江辰",title:"合适",mood:["甜","幸福"]},
+{artist:"江辰",title:"年少成名",mood:["開心","興奮"]},
+
+// 派偉俊
+{artist:"派偉俊",title:"隔著螢幕想念你",mood:["思念","哀傷"]},
+{artist:"派偉俊",title:"最後一次心碎",mood:["心痛","悲傷"]},
+{artist:"派偉俊",title:"Drinking On A Tuesday",mood:["低落","思考"]},
+{artist:"派偉俊",title:"Somebody I Hate Myself Sometimes",mood:["自責","低落"]},
+{artist:"派偉俊",title:"左轉燈",mood:["困惑","焦慮"]},
+{artist:"派偉俊",title:"Six Degrees",mood:["思考","迷茫"]},
+{artist:"派偉俊",title:"Cold Don’t Wanna Lie Try",mood:["冷漠","無奈"]},
+
+// 米津玄師
+{artist:"米津玄師",title:"Lemon",mood:["哀傷","失落"]},
+{artist:"米津玄師",title:"KICK BACK",mood:["興奮","嗨"]},
+{artist:"米津玄師",title:"打上花火",mood:["甜","浪漫"]},
+{artist:"米津玄師",title:"LOSER",mood:["低落","沮喪"]},
+{artist:"米津玄師",title:"ピースサイン",mood:["振奮","開心"]},
+{artist:"米津玄師",title:"灰色と青",mood:["哀傷","思念"]},
+{artist:"米津玄師",title:"感電",mood:["激動","興奮"]},
+{artist:"米津玄師",title:"馬と鹿",mood:["焦慮","困惑"]},
+{artist:"米津玄師",title:"POP SONG M八七",mood:["開心","嗨"]},
+{artist:"米津玄師",title:"海の幽霊",mood:["孤單","哀傷"]},
+{artist:"米津玄師",title:"地球儀",mood:["思考","沉思"]},
+{artist:"米津玄師",title:"Pale Blue Flamingo",mood:["甜","浪漫"]},
+{artist:"米津玄師",title:"TEENAGE RIOT",mood:["興奮","激動"]},
+{artist:"米津玄師",title:"アイネクライネ",mood:["甜","浪漫"]},
+{artist:"米津玄師",title:"Vivi",mood:["愉快","開心"]},
+{artist:"米津玄師",title:"ゴーゴー幽霊船",mood:["趣味","輕鬆"]},
+{artist:"米津玄師",title:"さよーならまたいつか",mood:["哀傷","離別"]},
+{artist:"米津玄師",title:"LADY IRIS",mood:["甜","浪漫"]},
+{artist:"米津玄師",title:"OUT",mood:["氣憤","不爽"]},
+
+// YOASOBI
+{artist:"YOASOBI",title:"夜に駆ける",mood:["激動","興奮"]},
+{artist:"YOASOBI",title:"群青",mood:["哀傷","低落"]},
+{artist:"YOASOBI",title:"怪物",mood:["害怕","恐懼"]},
+{artist:"YOASOBI",title:"アイドル",mood:["甜","開心"]},
+{artist:"YOASOBI",title:"祝福",mood:["愉快","幸福"]},
+{artist:"YOASOBI",title:"勇者",mood:["振奮","興奮"]},
+{artist:"YOASOBI",title:"三原色",mood:["平靜","療癒"]},
+{artist:"YOASOBI",title:"アンコール",mood:["開心","快樂"]},
+{artist:"YOASOBI",title:"ハルジオン",mood:["甜","幸福"]},
+{artist:"YOASOBI",title:"あの夢をなぞって",mood:["回憶","思念"]},
+{artist:"YOASOBI",title:"ミスター",mood:["趣味","輕鬆"]},
+{artist:"YOASOBI",title:"好きだ",mood:["甜","心暖"]},
+{artist:"YOASOBI",title:"優しい彗星",mood:["平靜","療癒"]}, 
 ];
 
-// ===== 搜尋 =====
-function search(){
-  const key=document.getElementById("searchInput").value.trim().toLowerCase();
-  const box=document.getElementById("results");
-  box.innerHTML="";
+function searchSongs() {
+    const query = document.getElementById('searchInput').value.toLowerCase();
+    const resultsDiv = document.getElementById('results');
+    resultsDiv.innerHTML = '';
 
-  const result=songs.filter(s=>
-    s.title.toLowerCase().includes(key) ||
-    s.artist.toLowerCase().includes(key) ||
-    emotions.some(e=>e.includes(key))
-  );
+    const filteredSongs = songs.filter(song => {
+        const artistMatch = song.artist.toLowerCase().includes(query);
+        const titleMatch = song.title.toLowerCase().includes(query);
+        const moodMatch = song.mood.some(m => m.toLowerCase().includes(query));
+        return artistMatch || titleMatch || moodMatch;
+    });
 
-  if(result.length===0){
-    box.innerHTML="<p>找不到</p>";
-    return;
-  }
+    if(filteredSongs.length === 0) {
+        resultsDiv.innerHTML = '<p>沒有找到符合的歌曲。</p>';
+        return;
+    }
 
-  result.forEach(s=>{
-    const e=emotions[Math.floor(Math.random()*emotions.length)];
-    box.innerHTML+=`
-      <div class="card">
-        <div class="title">${s.title}</div>
-        <div class="artist">${s.artist}</div>
-        <div class="emotion">情緒：${e}</div>
-      </div>
-    `;
-  });
+    filteredSongs.forEach(song => {
+        const card = document.createElement('div');
+        card.className = 'song-card';
+        card.innerHTML = `<div class='song-title'>${song.title}</div>` +
+                         `<div class='song-artist'>${song.artist}</div>` +
+                         `<div class='song-mood'>情緒: ${song.mood.join(', ')}</div>`;
+        resultsDiv.appendChild(card);
+    });
 }
 </script>
-
 </body>
 </html>
   </body>
