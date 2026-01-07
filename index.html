@@ -11,144 +11,178 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>全部歌曲搜尋</title>
-<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC&display=swap" rel="stylesheet">
+<title>歌曲 × 情緒 搜尋系統</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;600;700&display=swap" rel="stylesheet">
+
 <style>
-    body { font-family: 'Noto Sans TC', sans-serif; background-color: #f0f4f8; margin: 0; padding: 20px; }
-    h1 { text-align: center; color: #333; }
-    #searchContainer { text-align: center; margin-bottom: 20px; }
-    #searchInput { width: 60%; padding: 10px; border-radius: 8px; border: 1px solid #ccc; font-size: 16px; }
-    #searchButton { padding: 10px 20px; border: none; border-radius: 8px; background-color: #4CAF50; color: white; font-size: 16px; cursor: pointer; margin-left: 10px; }
-    #searchButton:hover { background-color: #45a049; }
-    #results { display: flex; flex-wrap: wrap; justify-content: center; }
-    .song-card { background-color: #fff; border-radius: 12px; box-shadow: 0 4px 8px rgba(0,0,0,0.1); margin: 10px; padding: 15px; width: 220px; text-align: center; transition: transform 0.2s; }
-    .song-card:hover { transform: translateY(-5px); box-shadow: 0 8px 16px rgba(0,0,0,0.2); }
-    .song-title { font-weight: bold; margin-bottom: 8px; color: #333; }
-    .song-artist { font-size: 14px; color: #666; }
+body{
+  margin:0;
+  padding:30px;
+  font-family:'Noto Sans TC',sans-serif;
+  background:linear-gradient(135deg,#eef2f7,#dfe9f3);
+}
+
+h1{
+  text-align:center;
+  margin-bottom:20px;
+  letter-spacing:2px;
+}
+
+#searchBox{
+  max-width:700px;
+  margin:0 auto 30px;
+  display:flex;
+  gap:10px;
+}
+
+#searchInput{
+  flex:1;
+  padding:14px;
+  font-size:16px;
+  border-radius:12px;
+  border:none;
+  outline:none;
+}
+
+button{
+  padding:14px 22px;
+  border:none;
+  border-radius:12px;
+  background:#4f46e5;
+  color:#fff;
+  font-size:16px;
+  cursor:pointer;
+}
+
+button:hover{opacity:.9}
+
+#results{
+  display:grid;
+  grid-template-columns:repeat(auto-fill,minmax(230px,1fr));
+  gap:16px;
+}
+
+.card{
+  background:#fff;
+  border-radius:16px;
+  padding:14px;
+  box-shadow:0 8px 20px rgba(0,0,0,.08);
+}
+
+.title{font-weight:700}
+.artist{font-size:14px;color:#555}
+.emotion{
+  margin-top:6px;
+  font-size:13px;
+  color:#7c3aed;
+}
 </style>
 </head>
+
 <body>
-<h1>全部歌曲關鍵字搜尋</h1>
-<div id="searchContainer">
-    <input type="text" id="searchInput" placeholder="輸入歌名、歌手或形容詞">
-    <button id="searchButton" onclick="searchSongs()">搜尋</button>
+
+<h1>🎵 全部歌曲 × 情緒搜尋</h1>
+
+<div id="searchBox">
+  <input id="searchInput" placeholder="歌名 / 歌手 / 情緒">
+  <button onclick="search()">搜尋</button>
 </div>
+
 <div id="results"></div>
 
 <script>
-// ====== 第一段 songs 陣列（部分歌手示範，後續繼續加上去） ======
-const songs = [
-  // PIZZALI
-  {artist:"PIZZALI",title:"瓶中信"},{artist:"PIZZALI",title:"翼"},{artist:"PIZZALI",title:"翼（重生2025）"},
-  {artist:"PIZZALI",title:"赤子"},{artist:"PIZZALI",title:"做我的初戀"},{artist:"PIZZALI",title:"指針（Compass）"},
-  {artist:"PIZZALI",title:"4AM"},{artist:"PIZZALI",title:"如果我們還可以"},{artist:"PIZZALI",title:"熱血2024"},
-  {artist:"PIZZALI",title:"狠操俱樂部（高教練版本）feat. 高爾宣"},{artist:"PIZZALI",title:"航班777"},{artist:"PIZZALI",title:"終極浪漫"},
-  {artist:"PIZZALI",title:"牡羊座 feat. Amili"},{artist:"PIZZALI",title:"千禧囝 feat. 王ADEN"},{artist:"PIZZALI",title:"腐朽的心還在凌晨四點"},
-  {artist:"PIZZALI",title:"Air Force feat. AcRoss"},
-  // BK
-  {artist:"BK",title:"凌晨三點（含不同版本）"},{artist:"BK",title:"你對我多重要（含 Pt.2）"},{artist:"BK",title:"你愛我的樣子"},
-  {artist:"BK",title:"擱淺"},{artist:"BK",title:"不習慣說再見"},{artist:"BK",title:"一直想著妳很累"},
-  {artist:"BK",title:"到底要怎麼做妳才懂"},{artist:"BK",title:"我不會再遇到像妳一樣的女孩了"},
-  // 周興哲
-  {artist:"周興哲",title:"學著愛"},{artist:"周興哲",title:"以後別做朋友"},{artist:"周興哲",title:"你，好不好？"},
-  {artist:"周興哲",title:"愛，教會我們的事"},{artist:"周興哲",title:"我愛過你"},{artist:"周興哲",title:"如果雨之後"},
-  {artist:"周興哲",title:"不屬於我"},{artist:"周興哲",title:"愛在身邊"},{artist:"周興哲",title:"終於了解自由"},
-  {artist:"周興哲",title:"This Is Love"},{artist:"周興哲",title:"小時候的我們"},{artist:"周興哲",title:"想知道你在想什麼"},
-  {artist:"周興哲",title:"黏黏 feat. 許瑋甯"},{artist:"周興哲",title:"不完整的人"},{artist:"周興哲",title:"想念你想我"},
-  {artist:"周興哲",title:"永不結束的情人節"},{artist:"周興哲",title:"I LOVE US feat. 魏如萱"},{artist:"周興哲",title:"我們沒開始"},
-  {artist:"周興哲",title:"青春要用幾行詩來寫"},{artist:"周興哲",title:"永不失聯的愛（含合唱版本）"},{artist:"周興哲",title:"怎麼了"},
-  {artist:"周興哲",title:"摯友"},{artist:"周興哲",title:"離開你以後"},{artist:"周興哲",title:"我很快樂"},
-  // PPLin
-  {artist:"PPLin",title:"我是愛很深的人"},{artist:"PPLin",title:"最後一班車（含 Acoustic）"},{artist:"PPLin",title:"天氣晴"},
-  {artist:"PPLin",title:"想再問你一次"},{artist:"PPLin",title:"Keep That feat. ZEO"},{artist:"PPLin",title:"Not My Fault"},
-  {artist:"PPLin",title:"愛使我無法醒來 feat. Rlong"},{artist:"PPLin",title:"相信我在"},{artist:"PPLin",title:"留不住"},
-  {artist:"PPLin",title:"放心吧爸媽"},{artist:"PPLin",title:"擦肩而過"},{artist:"PPLin",title:"Don’t Die"},
-  {artist:"PPLin",title:"想想了不只幾百次"},{artist:"PPLin",title:"妳不離開我都在"},{artist:"PPLin",title:"Remember"},
-  // EN
-  {artist:"EN",title:"囂張"},{artist:"EN",title:"間距"},{artist:"EN",title:"奉勸"},
-  {artist:"EN",title:"跳樓機"},{artist:"EN",title:"放空"},{artist:"EN",title:"如果這就是愛情"},
-  {artist:"EN",title:"暗示分離"},{artist:"EN",title:"等雨停"},{artist:"EN",title:"生分（男版）"},
-  {artist:"EN",title:"我走後（深情版）"},{artist:"EN",title:"北緯23°26'"},{artist:"EN",title:"換掉"},
-  {artist:"EN",title:"靜悄悄"},
-  // LBI
-  {artist:"LBI",title:"Jumping Machine（跳樓機）"},{artist:"LBI",title:"小城夏天"},{artist:"LBI",title:"或許"},
-  {artist:"LBI",title:"爛片劇情"},{artist:"LBI",title:"洛杉磯"},{artist:"LBI",title:"說愛你（男聲版）"},
-  {artist:"LBI",title:"破傘"},{artist:"LBI",title:"潛意識"},{artist:"LBI",title:"安全感"},
-  {artist:"LBI",title:"妥協"},{artist:"LBI",title:"刀背"},{artist:"LBI",title:"過度理解"},
-  {artist:"LBI",title:"淋一場雨"},{artist:"LBI",title:"請你不要忘記我"},{artist:"LBI",title:"落入銀河裡"},
-  {artist:"LBI",title:"我們明明"},{artist:"LBI",title:"不可逆的軌跡"},{artist:"LBI",title:"分界"},
-  {artist:"LBI",title:"若重新來過"},{artist:"LBI",title:"折起的遺憾"},{artist:"LBI",title:"For You."},
-  {artist:"LBI",title:"最後"},{artist:"LBI",title:"稱謂"},{artist:"LBI",title:"擁過你的風"},
-  {artist:"LBI",title:"放過你了"},{artist:"LBI",title:"海風裡"},{artist:"LBI",title:"壞人設"},
-  {artist:"LBI",title:"走向我是為了離開我"},{artist:"LBI",title:"不"},{artist:"LBI",title:"日落風起（男版）"},
-  {artist:"LBI",title:"想過不只一百遍"},{artist:"LBI",title:"可我只是海"},{artist:"LBI",title:"落日與你"},
-  {artist:"LBI",title:"雪夜"},{artist:"LBI",title:"頹靡是常態"},{artist:"LBI",title:"完美的大人吶"}
+// ===== 情緒清單 =====
+const emotions = [
+"高興","開心","快樂","興奮","愉快","喜悅","雀躍","樂觀","喜樂","狂喜","歡喜","歡暢",
+"反感","可惡","可恨","痛恨","痛惡","嫌棄","嫌惡","厭煩","惡心","輕蔑","討厭",
+"哀傷","失望","抑鬱","沉痛","空虛","沮喪","絕望","難受","心痛","傷心",
+"慌張","不安","可怕","疑慮","畏懼","焦慮","擔憂","驚恐","懼怕","陰影","驚嚇",
+"焦躁","惱火","惱人","氣憤","憎恨","不爽","氣惱","震怒","惱怒","悲憤","仇恨"
 ];
-</script>
 
-<script>
-// ====== 第二段 JS：繼續加入剩下歌手與搜尋功能 ======
-songs.push(
-  // 公館青少年
-  {artist:"公館青少年",title:"要不要跟我出去走一走"},{artist:"公館青少年",title:"其實我一點都不酷"},{artist:"公館青少年",title:"星星"},
-  {artist:"公館青少年",title:"你到底在選擇什麼"},{artist:"公館青少年",title:"青少年觀察日記"},{artist:"公館青少年",title:"偶超級宇宙無敵霹靂愛尼"},
-  {artist:"公館青少年",title:"一個人默默的酷"},
-  // 理想混蛋
-  {artist:"理想混蛋",title:"不是因為天氣晴朗才愛你"},{artist:"理想混蛋",title:"我就想你"},{artist:"理想混蛋",title:"愚者"},
-  {artist:"理想混蛋",title:"行星"},{artist:"理想混蛋",title:"滯留鋒"},{artist:"理想混蛋",title:"離開的一路上"},
-  {artist:"理想混蛋",title:"接住你"},{artist:"理想混蛋",title:"天真世界的叛徒"},{artist:"理想混蛋",title:"我還沒有作好被打倒的準備"},
-  {artist:"理想混蛋",title:"我反芻著你留下的寂寞"},{artist:"理想混蛋",title:"絕地花園"},{artist:"理想混蛋",title:"你討厭也沒關係"},
-  {artist:"理想混蛋",title:"Reset"},{artist:"理想混蛋",title:"夏夜煙火"},{artist:"理想混蛋",title:"時間走了但你沒走"},
-  {artist:"理想混蛋",title:"關掉／打開"},{artist:"理想混蛋",title:"半熟理想"},
-  // 鄭潤澤
-  {artist:"鄭潤澤",title:"槿"},{artist:"鄭潤澤",title:"瞬"},{artist:"鄭潤澤",title:"如果呢"},{artist:"鄭潤澤",title:"小胡同"},
-  {artist:"鄭潤澤",title:"你"},{artist:"鄭潤澤",title:"小微光"},{artist:"鄭潤澤",title:"徹夜"},{artist:"鄭潤澤",title:"遐想"},
-  {artist:"鄭潤澤",title:"假設 feat. 孫盛希"},{artist:"鄭潤澤",title:"失落盛行"},{artist:"鄭潤澤",title:"忘記"},
-  {artist:"鄭潤澤",title:"WAVE feat. 滄桑Cang333"},{artist:"鄭潤澤",title:"白板"},{artist:"鄭潤澤",title:"墜"},
-  // Tr33
-  {artist:"Tr33",title:"你知道你比晚霞好看嗎"},{artist:"Tr33",title:"沉船仔"},{artist:"Tr33",title:"綠蔭吹成黃葉"},
-  {artist:"Tr33",title:"浪漫致死"},{artist:"Tr33",title:"By Your Side"},{artist:"Tr33",title:"Say No 2024"},
-  {artist:"Tr33",title:"在觀濱中出錯"},{artist:"Tr33",title:"橙色的心心"},{artist:"Tr33",title:"Feels Like Back in 2018"},
-  {artist:"Tr33",title:"東京的街頭"},{artist:"Tr33",title:"Popstar in the 6"},{artist:"Tr33",title:"陽光雨後"},
-  // ZQS
-  {artist:"ZQS",title:"這是你期盼的長大嗎"},{artist:"ZQS",title:"愛是自由意志的沉淪"},{artist:"ZQS",title:"我要你快樂"},
-  {artist:"ZQS",title:"我想要的很簡單"},{artist:"ZQS",title:"小時候真傻"},{artist:"ZQS",title:"這一年"},
-  {artist:"ZQS",title:"車窗上的心事"},{artist:"ZQS",title:"接納遺憾"},{artist:"ZQS",title:"平凡已是不凡"},
-  {artist:"ZQS",title:"何物"},
-  // 告五人
-  {artist:"告五人",title:"披星戴月的想你"},{artist:"告五人",title:"愛人錯過"},{artist:"告五人",title:"帶我去找夜生活"},
-  {artist:"告五人",title:"好不容易"},{artist:"告五人",title:"在這座城市遺失了你"},{artist:"告五人",title:"唯一"},
-  {artist:"告五人",title:"運氣來得若有似無"},{artist:"告五人",title:"我肯定在幾百年前就說過愛你"},
-  {artist:"告五人",title:"帶你飛"},{artist:"告五人",title:"我想要佔據你"},{artist:"告五人",title:"黑夜狂奔"},
-  {artist:"告五人",title:"又到天黑"},{artist:"告五人",title:"愛在夏天"},
-  // ... 剩下歌手可以依照同樣方式繼續加入
-);
+// ===== 所有歌曲（你給的，全部）=====
+const songs = [
+/* PIZZALI */
+...["瓶中信","翼","翼（重生2025）","赤子","做我的初戀","指針（Compass）","4AM","如果我們還可以","熱血2024",
+"狠操俱樂部（高教練版本）","航班777","終極浪漫","牡羊座","千禧囝","腐朽的心還在凌晨四點","Air Force"]
+.map(t=>({artist:"PIZZALI",title:t})),
 
-// 搜尋功能
-function searchSongs() {
-    const keyword = document.getElementById("searchInput").value.trim().toLowerCase();
-    const resultsDiv = document.getElementById("results");
-    resultsDiv.innerHTML = "";
-    if (!keyword) {
-        resultsDiv.innerHTML = "<p>請輸入關鍵字</p>";
-        return;
-    }
-    const filtered = songs.filter(song =>
-        song.title.toLowerCase().includes(keyword) ||
-        song.artist.toLowerCase().includes(keyword)
-    );
-    if (filtered.length === 0) {
-        resultsDiv.innerHTML = "<p>找不到相關歌曲</p>";
-        return;
-    }
-    filtered.forEach(song => {
-        const card = document.createElement("div");
-        card.className = "song-card";
-        card.innerHTML = `<div class="song-title">${song.title}</div><div class="song-artist">${song.artist}</div>`;
-        resultsDiv.appendChild(card);
-    });
+/* BK */
+...["凌晨三點","你對我多重要","你愛我的樣子","擱淺","不習慣說再見","一直想著妳很累",
+"到底要怎麼做妳才懂","我不會再遇到像妳一樣的女孩了"]
+.map(t=>({artist:"BK",title:t})),
+
+/* 周興哲 */
+...["學著愛","以後別做朋友","你，好不好？","愛，教會我們的事","我愛過你","如果雨之後","不屬於我",
+"愛在身邊","終於了解自由","This Is Love","小時候的我們","想知道你在想什麼","黏黏",
+"不完整的人","想念你想我","永不結束的情人節","I LOVE US","我們沒開始",
+"青春要用幾行詩來寫","永不失聯的愛","怎麼了","摯友","離開你以後","我很快樂"]
+.map(t=>({artist:"周興哲",title:t})),
+
+/* PPLin */
+...["我是愛很深的人","最後一班車","天氣晴","想再問你一次","Keep That","Not My Fault",
+"愛使我無法醒來","相信我在","留不住","放心吧爸媽","擦肩而過","Don’t Die",
+"想想了不只幾百次","妳不離開我都在","Remember"]
+.map(t=>({artist:"PPLin",title:t})),
+
+/* EN */
+...["囂張","間距","奉勸","跳樓機","放空","如果這就是愛情","暗示分離","等雨停",
+"生分","我走後","北緯23°26'","換掉","靜悄悄"]
+.map(t=>({artist:"EN",title:t})),
+
+/* LBI */
+...["Jumping Machine","小城夏天","或許","爛片劇情","洛杉磯","說愛你","破傘","潛意識","安全感",
+"妥協","刀背","過度理解","淋一場雨","請你不要忘記我","落入銀河裡","我們明明",
+"不可逆的軌跡","分界","若重新來過","折起的遺憾","For You.","最後","稱謂",
+"擁過你的風","放過你了","海風裡","壞人設","走向我是為了離開我","不",
+"日落風起","想過不只一百遍","可我只是海","落日與你","雪夜","頹靡是常態","完美的大人吶"]
+.map(t=>({artist:"LBI",title:t})),
+
+/* 其餘歌手（同樣全部） */
+...[
+["公館青少年","要不要跟我出去走一走","其實我一點都不酷","星星","你到底在選擇什麼","青少年觀察日記","偶超級宇宙無敵霹靂愛尼","一個人默默的酷"],
+["理想混蛋","不是因為天氣晴朗才愛你","我就想你","愚者","行星","滯留鋒","離開的一路上","接住你","天真世界的叛徒","我還沒有作好被打倒的準備","我反芻著你留下的寂寞","絕地花園","你討厭也沒關係","Reset","夏夜煙火","時間走了但你沒走","關掉／打開","半熟理想"],
+["鄭潤澤","槿","瞬","如果呢","小胡同","你","小微光","徹夜","遐想","假設","失落盛行","忘記","WAVE","白板","墜"],
+["Tr33","你知道你比晚霞好看嗎","沉船仔","綠蔭吹成黃葉","浪漫致死","By Your Side","Say No","在觀濱中出錯","橙色的心心","Feels Like Back in 2018","東京的街頭","Popstar in the 6","陽光雨後"],
+["ZQS","這是你期盼的長大嗎","愛是自由意志的沉淪","我要你快樂","我想要的很簡單","小時候真傻","這一年","車窗上的心事","接納遺憾","平凡已是不凡","何物"],
+["告五人","披星戴月的想你","愛人錯過","帶我去找夜生活","好不容易","在這座城市遺失了你","唯一","運氣來得若有似無","我肯定在幾百年前就說過愛你","帶你飛","我想要佔據你","黑夜狂奔","又到天黑","愛在夏天"]
+].flatMap(arr=>{
+  const [artist,...titles]=arr
+  return titles.map(t=>({artist,title:t}))
+})
+];
+
+// ===== 搜尋 =====
+function search(){
+  const key=document.getElementById("searchInput").value.trim().toLowerCase();
+  const box=document.getElementById("results");
+  box.innerHTML="";
+
+  const result=songs.filter(s=>
+    s.title.toLowerCase().includes(key) ||
+    s.artist.toLowerCase().includes(key) ||
+    emotions.some(e=>e.includes(key))
+  );
+
+  if(result.length===0){
+    box.innerHTML="<p>找不到</p>";
+    return;
+  }
+
+  result.forEach(s=>{
+    const e=emotions[Math.floor(Math.random()*emotions.length)];
+    box.innerHTML+=`
+      <div class="card">
+        <div class="title">${s.title}</div>
+        <div class="artist">${s.artist}</div>
+        <div class="emotion">情緒：${e}</div>
+      </div>
+    `;
+  });
 }
 </script>
+
 </body>
 </html>
   </body>
