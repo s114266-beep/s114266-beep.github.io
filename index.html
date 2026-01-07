@@ -6,35 +6,35 @@
     <link rel="icon" href="螢幕擷取畫面 2025-11-20 113123.png">    
   </head>
   <body>
-    <!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="zh-Hant">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>全部歌曲搜尋</title>
-<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC&display=swap" rel="stylesheet">
+<title>歌曲搜尋</title>
 <style>
-    body { font-family: 'Noto Sans TC', sans-serif; background-color: #f0f4f8; margin: 0; padding: 20px; }
-    h1 { text-align: center; color: #333; margin-bottom: 30px; }
-    #searchContainer { text-align: center; margin-bottom: 30px; }
-    #searchInput { width: 60%; padding: 10px; border-radius: 8px; border: 1px solid #ccc; font-size: 16px; }
-    #searchButton { padding: 10px 20px; border: none; border-radius: 8px; background-color: #4CAF50; color: white; font-size: 16px; cursor: pointer; margin-left: 10px; }
-    #searchButton:hover { background-color: #45a049; }
-    #results { display: flex; flex-wrap: wrap; justify-content: center; }
-    .song-card { background-color: #fff; border-radius: 12px; box-shadow: 0 4px 8px rgba(0,0,0,0.1); margin: 10px; padding: 15px; width: 220px; text-align: center; transition: transform 0.2s; }
-    .song-card:hover { transform: translateY(-5px); box-shadow: 0 8px 16px rgba(0,0,0,0.2); }
-    .song-title { font-weight: bold; margin-bottom: 8px; color: #333; font-size: 16px; }
-    .song-artist { font-size: 14px; color: #666; margin-bottom: 5px; }
-    .song-mood { font-size: 12px; color: #888; }
+body { font-family: 'Noto Sans TC', sans-serif; background: #f0f4f8; margin:0; padding:20px; }
+h1 { text-align:center; color:#333; }
+#searchContainer { text-align:center; margin-bottom:20px; }
+#searchInput { width:60%; padding:10px; border-radius:8px; border:1px solid #ccc; font-size:16px; }
+#searchButton { padding:10px 20px; border:none; border-radius:8px; background-color:#4CAF50; color:white; font-size:16px; cursor:pointer; margin-left:10px; }
+#searchButton:hover { background-color:#45a049; }
+#results { display:flex; flex-wrap:wrap; justify-content:center; }
+.song-card { background:#fff; border-radius:12px; box-shadow:0 4px 8px rgba(0,0,0,0.1); margin:10px; padding:15px; width:220px; text-align:center; transition:transform 0.2s; }
+.song-card:hover { transform:translateY(-5px); box-shadow:0 8px 16px rgba(0,0,0,0.2); }
+.song-title { font-weight:bold; margin-bottom:8px; color:#333; }
+.song-artist { font-size:14px; color:#666; margin-bottom:5px; }
+.song-mood { font-size:12px; color:#888; }
 </style>
 </head>
 <body>
-<h1>全部歌曲關鍵字搜尋</h1>
+<h1>歌曲搜尋</h1>
 <div id="searchContainer">
     <input type="text" id="searchInput" placeholder="輸入歌名、歌手或情緒">
     <button id="searchButton" onclick="searchSongs()">搜尋</button>
 </div>
 <div id="results"></div>
+
 <script>
 const songs = [
   // PIZZALI
@@ -314,33 +314,37 @@ const songs = [
 ];
 
 function searchSongs() {
-    const query = document.getElementById('searchInput').value.toLowerCase();
-    const resultsDiv = document.getElementById('results');
-    resultsDiv.innerHTML = '';
+    const query = document.getElementById("searchInput").value.trim().toLowerCase();
+    const resultsDiv = document.getElementById("results");
+    resultsDiv.innerHTML = "";
 
-    const filteredSongs = songs.filter(song => {
-        const artistMatch = song.artist.toLowerCase().includes(query);
-        const titleMatch = song.title.toLowerCase().includes(query);
-        const moodMatch = song.mood.some(m => m.toLowerCase().includes(query));
-        return artistMatch || titleMatch || moodMatch;
-    });
+    if(!query) return;
 
-    if(filteredSongs.length === 0) {
-        resultsDiv.innerHTML = '<p>沒有找到符合的歌曲。</p>';
+    const results = songs.filter(song => 
+        song.title.toLowerCase().includes(query) ||
+        song.artist.toLowerCase().includes(query) ||
+        song.mood.some(m => m.toLowerCase() === query) // 嚴格對比情緒
+    );
+
+    if(results.length === 0) {
+        resultsDiv.innerHTML = "<p>找不到相關歌曲</p>";
         return;
     }
 
-    filteredSongs.forEach(song => {
-        const card = document.createElement('div');
-        card.className = 'song-card';
-        card.innerHTML = `<div class='song-title'>${song.title}</div>` +
-                         `<div class='song-artist'>${song.artist}</div>` +
-                         `<div class='song-mood'>情緒: ${song.mood.join(', ')}</div>`;
+    results.forEach(song => {
+        const card = document.createElement("div");
+        card.className = "song-card";
+        card.innerHTML = `
+            <div class="song-title">${song.title}</div>
+            <div class="song-artist">${song.artist}</div>
+            <div class="song-mood">${song.mood.join(", ")}</div>
+        `;
         resultsDiv.appendChild(card);
     });
 }
 </script>
 </body>
 </html>
+
   </body>
 </html>
