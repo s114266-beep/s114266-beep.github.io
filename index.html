@@ -10,48 +10,34 @@
 <html lang="zh-TW">
 <head>
 <meta charset="UTF-8">
-<title>歌曲情緒搜尋</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>歌曲情緒搜尋器</title>
 <style>
   body {
-    font-family: 'Noto Sans TC', sans-serif;
-    background: linear-gradient(to right, #a1c4fd, #c2e9fb);
-    padding: 40px;
-    color: #333;
+    font-family: "Microsoft JhengHei", sans-serif;
+    background: #f4f7fb;
+    margin: 0;
+    padding: 20px;
   }
   h1 {
     text-align: center;
     color: #333;
+    margin-bottom: 20px;
   }
-  .search-bar {
+  #search-container {
     text-align: center;
-    margin-bottom: 30px;
+    margin-bottom: 20px;
   }
-  input {
-    padding: 12px;
-    width: 250px;
+  input[type="text"] {
+    width: 300px;
+    padding: 10px;
     font-size: 16px;
-    border-radius: 25px;
-    border: 1px solid #aaa;
-    outline: none;
-    transition: 0.3s;
-  }
-  input:focus {
-    border-color: #666;
-    box-shadow: 0 0 10px rgba(0,0,0,0.1);
   }
   button {
-    padding: 12px 20px;
+    padding: 10px 20px;
     font-size: 16px;
-    border-radius: 25px;
-    border: none;
-    background: #4facfe;
-    color: #fff;
+    margin-left: 5px;
     cursor: pointer;
-    margin-left: 10px;
-    transition: 0.3s;
-  }
-  button:hover {
-    background: #00f2fe;
   }
   #results {
     display: flex;
@@ -59,38 +45,46 @@
     justify-content: center;
     gap: 15px;
   }
-  .song-card {
-    background: #fff;
-    border-radius: 12px;
-    padding: 15px 20px;
+  .card {
+    background: white;
+    border-radius: 10px;
+    padding: 15px;
     width: 250px;
-    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
     transition: transform 0.2s;
   }
-  .song-card:hover {
+  .card:hover {
     transform: translateY(-5px);
-    box-shadow: 0 6px 15px rgba(0,0,0,0.15);
   }
-  .song-card span {
-    font-weight: bold;
-    color: #4facfe;
+  .card h3 {
+    margin: 0 0 5px 0;
+    color: #007acc;
   }
-  .song-card p {
-    margin: 5px 0;
+  .card p {
+    margin: 2px 0;
+    color: #555;
+  }
+  #no-results {
+    text-align: center;
+    color: #777;
+    margin-top: 20px;
   }
 </style>
 </head>
 <body>
 
-<h1>歌曲情緒搜尋 🎵</h1>
-<div class="search-bar">
-  <input type="text" id="moodInput" placeholder="輸入情緒，例如：快樂、哀傷">
+<h1>歌曲情緒搜尋器</h1>
+
+<div id="search-container">
+  <input type="text" id="search-input" placeholder="輸入情緒，例如：快樂、哀傷、悲傷">
   <button onclick="searchSongs()">搜尋</button>
 </div>
 
 <div id="results"></div>
+<div id="no-results"></div>
 
 <script>
+// 你的完整歌曲資料
 const songs = [
   // 🎤 PIZZALI
   { artist: "PIZZALI", title: "瓶中信", mood: ["快樂"] },
@@ -409,30 +403,39 @@ const songs = [
 
 ];
 
-  function searchSongs() {
-    const mood = document.getElementById("moodInput").value.trim();
-    const resultsDiv = document.getElementById("results");
-    resultsDiv.innerHTML = "";
 
-    if (!mood) {
-      alert("請輸入情緒！");
-      return;
-    }
+function searchSongs() {
+  const input = document.getElementById("search-input").value.trim();
+  const resultsDiv = document.getElementById("results");
+  const noResultsDiv = document.getElementById("no-results");
+  
+  resultsDiv.innerHTML = "";
+  noResultsDiv.innerHTML = "";
 
-    const filtered = songs.filter(song => song.mood.includes(mood));
-
-    if (filtered.length === 0) {
-      resultsDiv.innerHTML = "<p>找不到符合的歌曲 😢</p>";
-      return;
-    }
-
-    filtered.forEach(song => {
-      const div = document.createElement("div");
-      div.className = "song-card";
-      div.innerHTML = `<span>${song.artist}</span><p>${song.title}</p><p>情緒：${song.mood.join(", ")}</p>`;
-      resultsDiv.appendChild(div);
-    });
+  if (!input) {
+    alert("請輸入情緒字詞！");
+    return;
   }
+
+  // 僅找出 mood 陣列中有對應情緒的歌曲
+  const filtered = songs.filter(song => song.mood.includes(input));
+
+  if (filtered.length === 0) {
+    noResultsDiv.textContent = "找不到符合情緒的歌曲 😢";
+    return;
+  }
+
+  filtered.forEach(song => {
+    const card = document.createElement("div");
+    card.className = "card";
+    card.innerHTML = `
+      <h3>${song.title}</h3>
+      <p>歌手: ${song.artist}</p>
+      <p>情緒: ${song.mood.join(", ")}</p>
+    `;
+    resultsDiv.appendChild(card);
+  });
+}
 </script>
 
 </body>
