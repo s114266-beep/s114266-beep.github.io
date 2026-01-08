@@ -94,137 +94,69 @@
 <script>
 // 你的完整歌曲資料
 const songs = [
-  // 🎤 PIZZALI
-  { artist: "PIZZALI", title: "瓶中信", mood: ["快樂"] },
-  { artist: "PIZZALI", title: "翼", mood: ["快樂"] },
-  { artist: "PIZZALI", title: "翼（重生2025）", mood: ["快樂"] },
-  { artist: "PIZZALI", title: "赤子", mood: ["快樂"] },
-  { artist: "PIZZALI", title: "做我的初戀", mood: ["快樂"] },
-  { artist: "PIZZALI", title: "指針（Compass）", mood: ["快樂"] },
-  { artist: "PIZZALI", title: "4AM", mood: ["悲傷"] },
-  { artist: "PIZZALI", title: "如果我們還可以", mood: ["哀傷"] },
-  { artist: "PIZZALI", title: "熱血2024", mood: ["興奮"] },
-  { artist: "PIZZALI", title: "狠操俱樂部（高教練版本）feat. 高爾宣", mood: ["興奮"] },
-  { artist: "PIZZALI", title: "航班777", mood: ["快樂"] },
-  { artist: "PIZZALI", title: "終極浪漫", mood: ["快樂"] },
-  { artist: "PIZZALI", title: "牡羊座 feat. Amili", mood: ["快樂"] },
-  { artist: "PIZZALI", title: "千禧囝 feat. 王ADEN", mood: ["快樂"] },
-  { artist: "PIZZALI", title: "腐朽的心還在凌晨四點", mood: ["哀傷"] },
-  { artist: "PIZZALI", title: "Air Force feat. AcRoss", mood: ["興奮"] },
+ [
+  { "artist": "8lak Fall", "title": "雨過天晴", "emotion": "希望" },
+  { "artist": "8lak Fall", "title": "我的女孩", "emotion": "心動" },
+  { "artist": "8lak Fall", "title": "真不懂為啥又emo了", "emotion": "EMO" }
+]
 
-  // 🎤 BK
-  { artist: "BK", title: "凌晨三點（含不同版本）", mood: ["傷心"] },
-  { artist: "BK", title: "你對我多重要（含 Pt.2）", mood: ["傷心"] },
-  { artist: "BK", title: "你愛我的樣子", mood: ["快樂"] },
-  { artist: "BK", title: "擱淺", mood: ["哀傷"] },
-  { artist: "BK", title: "不習慣說再見", mood: ["傷心"] },
-  { artist: "BK", title: "一直想著妳很累", mood: ["傷心"] },
-  { artist: "BK", title: "到底要怎麼做妳才懂", mood: ["哀傷"] },
-  { artist: "BK", title: "我不會再遇到像妳一樣的女孩了", mood: ["哀傷"] },
+ [
+  { "artist": "77莊永麒", "title": "回來我身邊", "emotion": "思念" },
+  { "artist": "77莊永麒", "title": "失去你之後", "emotion": "悲傷" },
+  { "artist": "77莊永麒", "title": "事到如今", "emotion": "失戀" }
+]
 
-  // 🎤 周興哲
-  { artist: "周興哲", title: "學著愛", mood: ["悲傷"] },
-  { artist: "周興哲", title: "以後別做朋友", mood: ["哀傷"] },
-  { artist: "周興哲", title: "你，好不好？", mood: ["快樂"] },
-  { artist: "周興哲", title: "愛，教會我們的事", mood: ["快樂"] },
-  { artist: "周興哲", title: "我愛過你", mood: ["哀傷"] },
-  { artist: "周興哲", title: "如果雨之後", mood: ["哀傷"] },
-  { artist: "周興哲", title: "不屬於我", mood: ["悲傷"] },
-  { artist: "周興哲", title: "愛在身邊", mood: ["快樂"] },
-  { artist: "周興哲", title: "終於了解自由", mood: ["快樂"] },
-  { artist: "周興哲", title: "This Is Love", mood: ["快樂"] },
-  { artist: "周興哲", title: "小時候的我們", mood: ["快樂"] },
-  { artist: "周興哲", title: "想知道你在想什麼", mood: ["哀傷"] },
-  { artist: "周興哲", title: "黏黏 feat. 許瑋甯", mood: ["快樂"] },
-  { artist: "周興哲", title: "不完整的人", mood: ["悲傷"] },
-  { artist: "周興哲", title: "想念你想我", mood: ["哀傷"] },
-  { artist: "周興哲", title: "永不結束的情人節", mood: ["快樂"] },
-  { artist: "周興哲", title: "I LOVE US feat. 魏如萱", mood: ["快樂"] },
-  { artist: "周興哲", title: "我們沒開始", mood: ["哀傷"] },
-  { artist: "周興哲", title: "青春要用幾行詩來寫", mood: ["快樂"] },
-  { artist: "周興哲", title: "永不失聯的愛（含合唱版本）", mood: ["快樂"] },
-  { artist: "周興哲", title: "怎麼了", mood: ["哀傷"] },
-  { artist: "周興哲", title: "摯友", mood: ["快樂"] },
-  { artist: "周興哲", title: "離開你以後", mood: ["傷心"] },
-  { artist: "周興哲", title: "我很快樂", mood: ["快樂"] },
+ [
+  { "artist": "LBI", "title": "小城夏天", "emotion": "快樂" },
+  { "artist": "LBI", "title": "或許", "emotion": "迷惘" },
+  { "artist": "LBI", "title": "爛片劇情", "emotion": "EMO" },
+  { "artist": "LBI", "title": "安全感", "emotion": "幸福" },
+  { "artist": "LBI", "title": "妥協", "emotion": "失戀" },
+  { "artist": "LBI", "title": "過度理解", "emotion": "傷心" },
+  { "artist": "LBI", "title": "放過你了", "emotion": "釋懷" }
+]
 
-  // 🎤 PPLin
-  { artist: "PPLin", title: "我是愛很深的人", mood: ["哀傷"] },
-  { artist: "PPLin", title: "最後一班車（含 Acoustic）", mood: ["哀傷"] },
-  { artist: "PPLin", title: "天氣晴", mood: ["快樂"] },
-  { artist: "PPLin", title: "想再問你一次", mood: ["哀傷"] },
-  { artist: "PPLin", title: "Keep That feat. ZEO", mood: ["快樂"] },
-  { artist: "PPLin", title: "Not My Fault", mood: ["悲傷"] },
-  { artist: "PPLin", title: "愛使我無法醒來 feat. Rlong", mood: ["悲傷"] },
-  { artist: "PPLin", title: "相信我在", mood: ["快樂"] },
-  { artist: "PPLin", title: "留不住", mood: ["哀傷"] },
-  { artist: "PPLin", title: "放心吧爸媽", mood: ["快樂"] },
-  { artist: "PPLin", title: "擦肩而過", mood: ["哀傷"] },
-  { artist: "PPLin", title: "Don’t Die", mood: ["哀傷"] },
-  { artist: "PPLin", title: "想想了不只幾百次", mood: ["哀傷"] },
-  { artist: "PPLin", title: "妳不離開我都在", mood: ["哀傷"] },
-  { artist: "PPLin", title: "Remember", mood: ["快樂"] },
+ [
+  { "artist": "PPLin", "title": "我是愛很深的人", "emotion": "傷心" },
+  { "artist": "PPLin", "title": "最後一班車", "emotion": "失戀" },
+  { "artist": "PPLin", "title": "天氣晴", "emotion": "快樂" },
+  { "artist": "PPLin", "title": "想再問你一次", "emotion": "迷惘" },
+  { "artist": "PPLin", "title": "留不住", "emotion": "悲傷" },
+  { "artist": "PPLin", "title": "放心吧爸媽", "emotion": "希望" },
+  { "artist": "PPLin", "title": "擦肩而過", "emotion": "孤獨" }
+]
+
   
-  // 🎤 EN
-  { artist: "EN", title: "囂張", mood: ["興奮"] },
-  { artist: "EN", title: "間距", mood: ["快樂"] },
-  { artist: "EN", title: "奉勸", mood: ["哀傷"] },
-  { artist: "EN", title: "跳樓機", mood: ["悲傷"] },
-  { artist: "EN", title: "放空", mood: ["快樂"] },
-  { artist: "EN", title: "如果這就是愛情", mood: ["哀傷"] },
-  { artist: "EN", title: "暗示分離", mood: ["哀傷"] },
-  { artist: "EN", title: "等雨停", mood: ["哀傷"] },
-  { artist: "EN", title: "生分（男版）", mood: ["哀傷"] },
-  { artist: "EN", title: "我走後（深情版）", mood: ["哀傷"] },
-  { artist: "EN", title: "北緯23°26'", mood: ["快樂"] },
-  { artist: "EN", title: "換掉", mood: ["哀傷"] },
-  { artist: "EN", title: "靜悄悄", mood: ["哀傷"] },
+  [
+  { "artist": "BK", "title": "凌晨三點", "emotion": "孤獨" },
+  { "artist": "BK", "title": "你對我多重要", "emotion": "心動" },
+  { "artist": "BK", "title": "你愛我的樣子", "emotion": "幸福" },
+  { "artist": "BK", "title": "擱淺", "emotion": "失戀" },
+  { "artist": "BK", "title": "不習慣說再見", "emotion": "傷心" },
+  { "artist": "BK", "title": "一直想著妳很累", "emotion": "EMO" },
+  { "artist": "BK", "title": "我不會再遇到像妳一樣的女孩了", "emotion": "悲傷" }
+]
+
   
-  // 🎤 LBI
-  { artist: "LBI", title: "Jumping Machine（跳樓機）", mood: ["悲傷"] },
-  { artist: "LBI", title: "小城夏天", mood: ["快樂"] },
-  { artist: "LBI", title: "或許", mood: ["哀傷"] },
-  { artist: "LBI", title: "爛片劇情", mood: ["哀傷"] },
-  { artist: "LBI", title: "洛杉磯", mood: ["快樂"] },
-  { artist: "LBI", title: "說愛你（男聲版）", mood: ["快樂"] },
-  { artist: "LBI", title: "破傘", mood: ["哀傷"] },
-  { artist: "LBI", title: "潛意識", mood: ["哀傷"] },
-  { artist: "LBI", title: "安全感", mood: ["快樂"] },
-  { artist: "LBI", title: "妥協", mood: ["哀傷"] },
-  { artist: "LBI", title: "刀背", mood: ["哀傷"] },
-  { artist: "LBI", title: "過度理解", mood: ["哀傷"] },
-  { artist: "LBI", title: "淋一場雨", mood: ["哀傷"] },
-  { artist: "LBI", title: "請你不要忘記我", mood: ["哀傷"] },
-  { artist: "LBI", title: "落入銀河裡", mood: ["哀傷"] },
-  { artist: "LBI", title: "我們明明", mood: ["哀傷"] },
-  { artist: "LBI", title: "不可逆的軌跡", mood: ["哀傷"] },
-  { artist: "LBI", title: "分界", mood: ["哀傷"] },
-  { artist: "LBI", title: "若重新來過", mood: ["哀傷"] },
-  { artist: "LBI", title: "折起的遺憾", mood: ["哀傷"] },
-  { artist: "LBI", title: "For You.", mood: ["快樂"] },
-  { artist: "LBI", title: "最後", mood: ["哀傷"] },
-  { artist: "LBI", title: "稱謂", mood: ["快樂"] },
-  { artist: "LBI", title: "擁過你的風", mood: ["快樂"] },
-  { artist: "LBI", title: "放過你了", mood: ["哀傷"] },
-  { artist: "LBI", title: "海風裡", mood: ["快樂"] },
-  { artist: "LBI", title: "壞人設", mood: ["哀傷"] },
-  { artist: "LBI", title: "走向我是為了離開我", mood: ["哀傷"] },
-  { artist: "LBI", title: "不 日落風起（男版）", mood: ["哀傷"] },
-  { artist: "LBI", title: "想過不只一百遍", mood: ["哀傷"] },
-  { artist: "LBI", title: "可我只是海", mood: ["哀傷"] },
-  { artist: "LBI", title: "落日與你", mood: ["哀傷"] },
-  { artist: "LBI", title: "雪夜", mood: ["哀傷"] },
-  { artist: "LBI", title: "頹靡是常態", mood: ["哀傷"] },
-  { artist: "LBI", title: "完美的大人吶", mood: ["哀傷"] },
+  [
+  { "artist": "PIZZALI", "title": "瓶中信", "emotion": "思念" },
+  { "artist": "PIZZALI", "title": "翼", "emotion": "希望" },
+  { "artist": "PIZZALI", "title": "赤子", "emotion": "迷惘" },
+  { "artist": "PIZZALI", "title": "做我的初戀", "emotion": "心動" },
+  { "artist": "PIZZALI", "title": "指針（Compass）", "emotion": "迷惘" },
+  { "artist": "PIZZALI", "title": "4AM", "emotion": "孤獨" },
+  { "artist": "PIZZALI", "title": "如果我們還可以", "emotion": "傷心" },
+  { "artist": "PIZZALI", "title": "終極浪漫", "emotion": "幸福" },
+  { "artist": "PIZZALI", "title": "牡羊座", "emotion": "興奮" }
+]
+
   
-  // 🎤 公館青少年
-  { artist: "公館青少年", title: "要不要跟我出去走一走", mood: ["快樂"] },
-  { artist: "公館青少年", title: "其實我一點都不酷", mood: ["快樂"] },
-  { artist: "公館青少年", title: "星星", mood: ["快樂"] },
-  { artist: "公館青少年", title: "你到底在選擇什麼", mood: ["哀傷"] },
-  { artist: "公館青少年", title: "青少年觀察日記", mood: ["快樂"] },
-  { artist: "公館青少年", title: "偶超級宇宙無敵霹靂愛尼", mood: ["快樂"] },
-  { artist: "公館青少年", title: "一個人默默的酷", mood: ["哀傷"] },
+ [
+  { "artist": "派偉俊", "title": "隔著螢幕想念你", "emotion": "思念" },
+  { "artist": "派偉俊", "title": "最後一次心碎", "emotion": "失戀" },
+  { "artist": "派偉俊", "title": "I Hate Myself Sometimes", "emotion": "EMO" }
+]
+
   
   // 🎤 理想混蛋
   { artist: "理想混蛋", title: "不是因為天氣晴朗才愛你", mood: ["快樂"] },
